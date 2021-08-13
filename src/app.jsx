@@ -1,13 +1,12 @@
 import React from "react";
 import styles from "./app.module.css";
+import Login from "./components/login/login";
 
-function App() {
+function App({ authService }) {
   return (
-    <>
-      <h1>Hello😀</h1>
-      <div className={styles.box1}></div>
-      <div className={styles.box2}></div>
-    </>
+    <div className={styles.app}>
+      <Login className={styles.modal} authService={authService} />
+    </div>
   );
 }
 

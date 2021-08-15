@@ -8,5 +8,7 @@
 }
 
 .desc {
+  display: block;
   color: makerWhite;
+  margin-bottom: 0.5em;
 }

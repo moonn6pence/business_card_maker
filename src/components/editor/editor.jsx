@@ -1,13 +1,16 @@
 import React from "react";
+import CardAddForm from "../card_add_form/card_add_form";
+import CardEditForm from "../card_edit_form/card_edit_form";
 import styles from "./editor.module.css";
 
-const Editor = (props) => {
+const Editor = ({ cards, addCard }) => {
   return (
     <section className={styles.editor}>
       <h1 className={styles.title}>Edit Card</h1>
-      <ul className={styles.cards}>
-        <li className={styles.card}></li>
-      </ul>
+      {cards.map((card) => (
+        <CardEditForm key={card.id} card={card} />
+      ))}
+      <CardAddForm onSubmit={addCard} />
     </section>
   );
 };

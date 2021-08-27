@@ -13,13 +13,24 @@ const Maker = ({ authService }) => {
     authService.logout();
   };
 
-  const addCard = (card) => {
-    const updated = [...cards, card];
-    setCards(updated);
+  const addOrUpdateCard = (card) => {
+    setCards((cards) => {
+      const updated = { ...cards };
+      updated[card.id] = card;
+      return updated;
+    });
   };
 
-  const [cards, setCards] = useState([
-    {
+  const deleteCard = (card) => {
+    setCards((cards) => {
+      const updated = { ...cards };
+      delete updated[card.id];
+      return updated;
+    });
+  };
+
+  const [cards, setCards] = useState({
+    1: {
       id: "1",
       name: "Simon",
       company: "DGU",
@@ -30,7 +41,7 @@ const Maker = ({ authService }) => {
       fileName: "simon",
       fileURL: "simon.png",
     },
-    {
+    2: {
       id: "2",
       name: "Kevin",
       company: "MCFC",
@@ -41,7 +52,7 @@ const Maker = ({ authService }) => {
       fileName: "kevin",
       fileURL: "kevin.png",
     },
-    {
+    3: {
       id: "3",
       name: "Jack",
       company: "MCFC",
@@ -52,7 +63,7 @@ const Maker = ({ authService }) => {
       fileName: "jack",
       fileURL: null,
     },
-  ]);
+  });
 
   useEffect(() => {
     authService //
@@ -66,7 +77,11 @@ const Maker = ({ authService }) => {
     <section className={styles.maker}>
       <Header onLogout={onLogout} />
       <section className={styles.container}>
-        <Editor cards={cards} addCard={addCard} />
+        <Editor
+          cards={cards}
+          addOrUpdateCard={addOrUpdateCard}
+          deleteCard={deleteCard}
+        />
         <Preview cards={cards} />
       </section>
       <Footer />

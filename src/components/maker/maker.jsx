@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Editor from "../editor/editor";
 import Footer from "../footer/footer";
@@ -8,7 +8,7 @@ import styles from "./maker.module.css";
 
 const Maker = ({ FileUploader, authService, cardRepository }) => {
   const history = useHistory();
-  const historyState = useHistory().state;
+  const historyState = history?.location?.state;
   const [cards, setCards] = useState({});
   const [userId, setUserId] = useState(historyState && historyState.id);
 
@@ -21,7 +21,7 @@ const Maker = ({ FileUploader, authService, cardRepository }) => {
           history.push("/");
         }
       });
-  });
+  }, [authService, history, userId]);
 
   useEffect(() => {
     if (!userId) {
@@ -31,11 +31,11 @@ const Maker = ({ FileUploader, authService, cardRepository }) => {
       setCards(cards);
     });
     return () => unsync();
-  }, [userId]);
+  }, [userId, cardRepository]);
 
-  const onLogout = () => {
+  const onLogout = useCallback(() => {
     authService.logout();
-  };
+  }, [authService]);
 
   const addOrUpdateCard = (card) => {
     setCards((cards) => {

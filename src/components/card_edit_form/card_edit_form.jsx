@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Button from "../button/button";
 import styles from "./card_edit_form.module.css";
 
@@ -24,9 +24,9 @@ const CardEditForm = ({ FileUploader, card, updateCard, onDelete }) => {
     });
   };
 
-  const onDeleteClick = () => {
+  const onDeleteClick = useCallback(() => {
     onDelete(card);
-  };
+  }, [onDelete, card]);
 
   return (
     <form className={styles.form}>

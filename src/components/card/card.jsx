@@ -6,7 +6,7 @@ const Card = ({ card }) => {
   const { name, company, title, email, theme, message, fileName, fileURL } =
     card;
 
-  const url = fileURL ? `/images/${fileURL}` : DEFAULT_IMAGE;
+  const url = fileURL || DEFAULT_IMAGE;
 
   return (
     <li className={`${styles.card} ${getThemes(theme)}`}>

@@ -23,6 +23,11 @@
   background-color: makerWhite;
 }
 
+.button {
+  outline: 0;
+  border: 0;
+}
+
 .fileInput {
   padding: 0;
   flex: 1 1 50%;

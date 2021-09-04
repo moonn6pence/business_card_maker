@@ -6,8 +6,32 @@ import Header from "../header/header";
 import Preview from "../preview/preview";
 import styles from "./maker.module.css";
 
-const Maker = ({ authService }) => {
+const Maker = ({ FileUploader, authService, cardRepository }) => {
   const history = useHistory();
+  const historyState = useHistory().state;
+  const [cards, setCards] = useState({});
+  const [userId, setUserId] = useState(historyState && historyState.id);
+
+  useEffect(() => {
+    authService //
+      .onAuthChange((user) => {
+        if (user) {
+          setUserId(user.uid);
+        } else {
+          history.push("/");
+        }
+      });
+  });
+
+  useEffect(() => {
+    if (!userId) {
+      return;
+    }
+    const unsync = cardRepository.sync(userId, (cards) => {
+      setCards(cards);
+    });
+    return () => unsync();
+  }, [userId]);
 
   const onLogout = () => {
     authService.logout();
@@ -19,6 +43,7 @@ const Maker = ({ authService }) => {
       updated[card.id] = card;
       return updated;
     });
+    cardRepository.save(userId, card);
   };
 
   const deleteCard = (card) => {
@@ -27,52 +52,9 @@ const Maker = ({ authService }) => {
       delete updated[card.id];
       return updated;
     });
+    cardRepository.delete(userId, card);
   };
 
-  const [cards, setCards] = useState({
-    1: {
-      id: "1",
-      name: "Simon",
-      company: "DGU",
-      theme: "light",
-      title: "Front-end engineer",
-      email: "shin421179@gmail.com",
-      message: "Just do it",
-      fileName: "simon",
-      fileURL: "simon.png",
-    },
-    2: {
-      id: "2",
-      name: "Kevin",
-      company: "MCFC",
-      theme: "dark",
-      title: "Back-end engineer",
-      email: "debrunye@gmail.com",
-      message: "Go for it",
-      fileName: "kevin",
-      fileURL: "kevin.png",
-    },
-    3: {
-      id: "3",
-      name: "Jack",
-      company: "MCFC",
-      theme: "colorful",
-      title: "Full-stack engineer",
-      email: "grealish@gmail.com",
-      message: "Life is short, art is long",
-      fileName: "jack",
-      fileURL: null,
-    },
-  });
-
-  useEffect(() => {
-    authService //
-      .onAuthChange((user) => {
-        if (!user) {
-          history.push("/");
-        }
-      });
-  });
   return (
     <section className={styles.maker}>
       <Header onLogout={onLogout} />
@@ -81,6 +63,7 @@ const Maker = ({ authService }) => {
           cards={cards}
           addOrUpdateCard={addOrUpdateCard}
           deleteCard={deleteCard}
+          FileUploader={FileUploader}
         />
         <Preview cards={cards} />
       </section>
